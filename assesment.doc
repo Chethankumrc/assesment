@@ -1,0 +1,61 @@
+docker run --name redis-master -p 6379:6379 --network redis-net -v /home/chethan/cluster/cluster_1/:/data/redis.conf -d redis redis-server /data/redis.conf --appendonly yes
+
+The command docker run is used to create and start a Docker container. The --name option sets the name of the container to redis-master. The -p option maps the port 6379 from the host to the port 6379 inside the container. This is necessary so that other containers or services can connect to Redis running inside this container.
+
+The --network option specifies the network to which the container should be attached. In this case, the network is named redis-net. This is useful when multiple containers need to communicate with each other.
+
+The -v option mounts a directory from the host into the container. In this case, the directory /home/chethan/cluster/cluster_1/ is mounted into the container at the path /data/redis.conf. This is useful when configuration files or other data need to be shared between the host and the container.
+
+The -d option runs the container in the background (detached mode), allowing the command to return immediately after the container is started.
+
+Finally, the command redis redis-server /data/redis.conf --appendonly yes specifies the image to use (redis) and the command to run inside the container (redis-server /data/redis.conf --appendonly yes). This starts the Redis server using the configuration file /data/redis.conf and enables the append-only mode, which ensures that all Redis data changes are persisted to disk.
+
+Overall, this command creates a Docker container running the Redis server in the background, with a specific name, network, and configuration file. The container is also accessible from the host through the mapped port 6379.
+
+
+
+
+
+
+
+
+
+
+docker run --name redis-replica1 -p 6380:6379 --network redis-net -v /home/chethan/cluster/cluster_2:/data/redis.conf -d redis redis-server /data/redis.conf --appendonly yes --slaveof redis-master 6379
+
+This command is used to run a Docker container for Redis as a replica node with a specific configuration.
+
+Here is a breakdown of the different parts of the command:
+
+docker run : This command is used to run a Docker container.
+
+--name redis-replica1 : This option specifies the name of the container as "redis-replica1".
+
+-p 6380:6379 : This option maps the host port 6380 to the container port 6379. This is necessary to enable communication between the host and the Redis container.
+
+--network redis-net : This option specifies the network to use for the container, in this case, "redis-net".
+
+-v /home/chethan/cluster/cluster_2:/data/redis.conf : This option specifies a volume to mount. It maps the "/home/chethan/cluster/cluster_2" directory on the host to the "/data/redis.conf" directory inside the container.
+
+-d redis : This option specifies the Docker image to use for the container, in this case, "redis".
+
+redis-server /data/redis.conf --appendonly yes --slaveof redis-master 6379 : This is the command to run inside the container. It starts the Redis server using the configuration file "/data/redis.conf" with append-only mode enabled and as a slave of the Redis master running on port 6379.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+docker run --name redis-replica2 -p 6381:6379 --network redis-net -v /home/chethan/cluster/cluster_3:/data/redis.conf -d redis redis-server /data/redis.conf --appendonly yes --slaveof redis-master 6379
